@@ -4,7 +4,7 @@ services:
     build:
       context: .
       args:
-          CDSAGGREGATE: http://md.incommon.org/InCommon/InCommon-metadata-idp-only.xml
+          CDSAGGREGATE: https://caf-shib2ops.ca/CoreServices/caf_metadata_signed_sha256.xml
           CDSOVERLAYURL: https://github.com/canariecaf/cds-overlay-CAF/archive/master.zip
     command: '/start.sh'
     ports:
