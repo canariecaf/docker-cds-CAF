@@ -53,8 +53,9 @@ RUN echo "CDS_REFRESHFREQINMIN=${CDS_REFRESHFREQINMIN}" >> ${CDS_BUILD_ENV}
 RUN echo "CDS_OVERLAYURL=${CDS_OVERLAYURL}" >> ${CDS_BUILD_ENV}
 
 # persist some of our settings in a specific file for each
-RUN echo "${CDSAGGREGATE}" > /var/www/aggregate2fetch
-RUN echo "${CDSOVERLAYURL}" > /var/www/defaultoverlayurl
+
+RUN echo '${CDSAGGREGATE}' > /var/www/aggregate2fetch
+RUN echo '${CDSOVERLAYURL}' > /var/www/defaultoverlayurl
 
     
 EXPOSE 80
