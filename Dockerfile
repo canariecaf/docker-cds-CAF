@@ -2,6 +2,7 @@ FROM canariecaf/docker-cds-core
 MAINTAINER Chris Phillips <chris.phillips@canarie.ca>
 
 USER root
+ENV HOME /root
 
 ### 
 ### important build arguements
@@ -35,8 +36,6 @@ ENV CDS_AGGREGATE=$CDSAGGREGATE
 ENV CDS_REFRESHFREQINMIN=$CDS_REFRESHFREQINMIN
 ENV CDS_OVERLAYURL=$CDSOVERLAYURL
 #					   ^-- where we use the 
-    
-EXPOSE 80
 
 #
 # prepare the overlay by dropping in the element and executing the overlay
@@ -57,11 +56,15 @@ RUN echo "CDS_OVERLAYURL=${CDS_OVERLAYURL}" >> ${CDS_BUILD_ENV}
 RUN echo "${CDSAGGREGATE}" > /var/www/aggregate2fetch
 RUN echo "${CDSOVERLAYURL}" > /var/www/defaultoverlayurl
 
+    
+EXPOSE 80
+EXPOSE 443
+
 RUN (cd /var/www; /var/www/overlay.sh ${CDS_OVERLAYURL} )
 
 
 
-CMD ["/bin/bash", "/start.sh", "${CDSAGGREGATE}"]
+CMD ["/bin/bash", "/root/start.sh", "${CDSAGGREGATE}"]
 
 
 
