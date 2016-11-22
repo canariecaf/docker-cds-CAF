@@ -24,6 +24,7 @@ ARG CDS_HTMLWAYFDIR=DS
 ARG CDS_WAYFDESTFILENAME=CAF.ds
 ARG CDS_REFRESHFREQINMIN=6
 ARG CDS_TRIGGER_IMPRINT=""
+ARG CDS_HTMLROOTDIR=${CDS_BASE}/html
 
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 # this is a hack for the variable being mysteriously blank
