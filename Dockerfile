@@ -8,13 +8,19 @@ ENV HOME /root
 ### important build arguements
 ###
 
-# where our environment settings in the container will be stored
-ENV CDS_BUILD_ENV=/var/www/env
+###
+### Configure our 'base'
+###
+ARG CDS_BASE=/root/cds
+ARG CDS_BASE_TEMPLATE=${CDS_BASE}/template
+
+# where we leave our settings inside the container for everything else to inherit and use
+
+ENV CDS_BUILD_ENV=/root/env
 
 
 ARG CDSAGGREGATE=https://caf-shib2ops.ca/CoreServices/caf_metadata_signed_sha256.xml
-ARG CDS_HTMLROOTDIR=/var/www/html
-ARG CDS_HTMLWAYFDIR=/var/www/html/DS
+ARG CDS_HTMLWAYFDIR=DS
 ARG CDS_WAYFDESTFILENAME=CAF.ds
 ARG CDS_REFRESHFREQINMIN=6
 
@@ -43,27 +49,28 @@ ENV CDS_OVERLAYURL=$CDSOVERLAYURL
 # The container we run from already has this file populated so we should replace it with our
 # customizations.
 
+
 RUN echo "CDS_AGGREGATE=${CDS_AGGREGATE}" > ${CDS_BUILD_ENV}
-#										  ^^-- note this is singular to erase the previous file
-#											  ||-- the rest are concatenations to the end of the file
+RUN echo "CDS_BASE=${CDS_BASE}" >> ${CDS_BUILD_ENV}
+RUN echo "CDS_BASE_TEMPLATE=${CDS_BASE_TEMPLATE}" >> ${CDS_BUILD_ENV}
+RUN echo "CDS_CODEBASE=${CDS_CODEBASE}" >> ${CDS_BUILD_ENV}
 RUN echo "CDS_HTMLROOTDIR=${CDS_HTMLROOTDIR}" >> ${CDS_BUILD_ENV}
 RUN echo "CDS_HTMLWAYFDIR=${CDS_HTMLWAYFDIR}" >> ${CDS_BUILD_ENV}
-RUN echo "CDS_WAYFDESTFILENAME=${CDS_WAYFDESTFILENAME}" >> ${CDS_BUILD_ENV}
-RUN echo "CDS_REFRESHFREQINMIN=${CDS_REFRESHFREQINMIN}" >> ${CDS_BUILD_ENV}
 RUN echo "CDS_OVERLAYURL=${CDS_OVERLAYURL}" >> ${CDS_BUILD_ENV}
+RUN echo "CDS_REFRESHFREQINMIN=${CDS_REFRESHFREQINMIN}" >> ${CDS_BUILD_ENV}
+RUN echo "CDS_WAYFDESTFILENAME=${CDS_WAYFDESTFILENAME}" >> ${CDS_BUILD_ENV}
+RUN echo "CDS_WAYFORIGINFILENAME=${CDS_WAYFORIGINFILENAME}" >> ${CDS_BUILD_ENV}
+RUN chmod 755 /root/env
+RUN chmod 755 /root
 
-# persist some of our settings in a specific file for each
 
-#RUN echo '${CDSAGGREGATE}' > /var/www/aggregate2fetch
-#RUN echo '${CDSOVERLAYURL}' > /var/www/defaultoverlayurl
+
 
     
 EXPOSE 80
 EXPOSE 443
 
-RUN (cd /var/www; /var/www/overlay.sh ${CDS_OVERLAYURL} )
-
-
+RUN (cd ${CDS_BASE}; ${CDS_BASE}/overlay.sh ${CDS_OVERLAYURL} )
 
 CMD ["/bin/bash", "/root/start.sh", "${CDSAGGREGATE}"]
 
